@@ -30,8 +30,8 @@ async function loadMovies(movieName = "popular", Videotype = "shows") {
 }
 
 // FIX 2: correct load event + proper call
-window.addEventListener("load", () => {
-    loadMovies("popular"); // default homepage content
+window.addEventListener("DOMContentLoaded", () => {
+    loadMovies();
 });
 
 // FIX 3: search input
@@ -39,9 +39,17 @@ input.addEventListener("input", async (e) => {
     const movieName = e.target.value.trim();
 
     if (!movieName) {
-        loadMovies("popular"); // show default again
+        await loadMovies("Popular"); // show default again
         return;
     }
 
     await loadMovies(movieName);
+});
+
+movieType.addEventListener("change", async () => {
+
+    const value = input.value.trim();
+
+    await loadMovies(value || "popular");
+
 });

@@ -16,7 +16,18 @@
 
     <!-- FIXED FORM -->
     <form class="search-bar-form" id="searchForm">
-        <input type="search" id="query" name="q" placeholder="Search...">
+        <div class="search-controls">
+            <select id="movieType">
+                <option value="shows" selected>TV Shows</option>
+                <option value="people">People</option>
+            </select>
+
+            <input
+                type="text"
+                id="query"
+                placeholder="Search..."
+            >
+        </div>
     </form>
 
     <div class="rows">
