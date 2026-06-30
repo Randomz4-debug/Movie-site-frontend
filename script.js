@@ -1,64 +1,94 @@
 const input = document.getElementById("query");
 const moviecards = document.querySelector(".movie-cards");
-const movieType_dropdown = document.getElementById("movieType");
+const movieTypeDropdown = document.getElementById("movieType");
 
-let movieName = "popular"
-let movieType = "shows"
+let movieName = "popular";
+let movieType = "shows";
 
-// FIX 1: make function async
-async function loadMovies(movieName = "popular", Videotype = "shows") {
-    const response = await fetch(`https://api.shadowstream.space/movies?name=${movieName}&type=${Videotype}`);
+async function loadMovies(name = movieName, type = movieType) {
 
-    const moviesData = await response.json();
+    moviecards.innerHTML = "<h2>Loading...</h2>";
 
-    moviecards.innerHTML = "";
+    try {
 
-    moviesData.forEach((movie) => {
-        if (!movie.show) return; // safety check
+        const response = await fetch(
+            `https://api.shadowstream.space/movies?name=${encodeURIComponent(name)}&type=${encodeURIComponent(type)}`
+        );
 
-        const card = document.createElement("div");
-        card.classList.add("card");
+        if (!response.ok) {
+            throw new Error(`Server returned ${response.status}`);
+        }
 
-        const title = document.createElement("h2");
-        title.textContent = movie.show.name;
+        const moviesData = await response.json();
 
-        const image = document.createElement("img");
-        image.src = movie.show.image
-            ? movie.show.image.medium
-            : "https://placehold.co/150x220?text=No+Image";
+        moviecards.innerHTML = "";
 
-        card.appendChild(title);
-        card.appendChild(image);
-        moviecards.appendChild(card);
-    });
+        if (!Array.isArray(moviesData) || moviesData.length === 0) {
+            moviecards.innerHTML = "<h2>No results found.</h2>";
+            return;
+        }
+
+        moviesData.forEach((item) => {
+
+            const data = item.show || item.person;
+
+            if (!data) return;
+
+            const card = document.createElement("div");
+            card.className = "card";
+
+            const image = document.createElement("img");
+            image.src =
+                data.image?.medium ??
+                "https://placehold.co/210x295?text=No+Image";
+
+            image.alt = data.name;
+
+            const title = document.createElement("h2");
+            title.textContent = data.name;
+
+            card.appendChild(image);
+            card.appendChild(title);
+
+            moviecards.appendChild(card);
+
+        });
+
+    } catch (err) {
+
+        console.error(err);
+
+        moviecards.innerHTML = `
+            <h2 style="color:red;text-align:center">
+                Failed to load data.<br>
+                ${err.message}
+            </h2>
+        `;
+
+    }
+
 }
 
-// FIX 2: correct load event + proper call
 window.addEventListener("DOMContentLoaded", () => {
     loadMovies();
 });
 
-// FIX 3: search input
-input.addEventListener("input", async (e) => {
-    movieName = e.target.value.trim();
+input.addEventListener("input", () => {
 
-    if (!movieName) {
-        await loadMovies("Popular"); // show default again
-        return;
+    movieName = input.value.trim();
+
+    if (movieName === "") {
+        movieName = "popular";
     }
 
-    await loadMovies(movieName, movieType);
-    movieName = "";
+    loadMovies(movieName, movieType);
+
 });
 
-movieType_dropdown.addEventListener("change", async () => {
+movieTypeDropdown.addEventListener("change", () => {
 
-    console.log("movieType changed to:", movieType.value);
+    movieType = movieTypeDropdown.value;
 
-    const value = input.value.trim();
-    movieType = value ? value : "popular";
-
-    await loadMovies(movieName, movieType);
-    movieType = "shows"; // reset to default after search
+    loadMovies(movieName, movieType);
 
 });
