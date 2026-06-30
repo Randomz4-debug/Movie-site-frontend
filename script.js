@@ -1,15 +1,14 @@
-import MovieFetcher from "../backend/script.js";
-
 const input = document.getElementById("query");
 const moviecards = document.querySelector(".movie-cards");
 
 // FIX 1: make function async
 async function loadMovies(movieName = "popular", Videotype = "shows") {
-    const movies = await MovieFetcher({ MovieName: movieName, type: Videotype });
+    const movies = await fetch(`/api/movies?name=${movieName}&type=${Videotype}`);
+    const moviesData = await movies.json();
 
     moviecards.innerHTML = "";
 
-    movies.forEach((movie) => {
+    moviesData.forEach((movie) => {
         if (!movie.show) return; // safety check
 
         const card = document.createElement("div");
