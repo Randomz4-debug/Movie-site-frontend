@@ -3,13 +3,9 @@ const moviecards = document.querySelector(".movie-cards");
 
 // FIX 1: make function async
 async function loadMovies(movieName = "popular", Videotype = "shows") {
-    const movies = await fetch(`https://api.shadowstream.space/movies?name=${movieName}&type=${Videotype}`);
+    const response = await fetch(`https://api.shadowstream.space/movies?name=${movieName}&type=${Videotype}`);
 
-    if (!response.ok) {
-        throw new Error(await response.text());
-    }
-
-    const moviesData = await movies.json();
+    const moviesData = await response.json();
 
     moviecards.innerHTML = "";
 
