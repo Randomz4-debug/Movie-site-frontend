@@ -1,6 +1,9 @@
 const input = document.getElementById("query");
 const moviecards = document.querySelector(".movie-cards");
 
+let movieName = "popular"
+let movieType = "shows"
+
 // FIX 1: make function async
 async function loadMovies(movieName = "popular", Videotype = "shows") {
     const response = await fetch(`https://api.shadowstream.space/movies?name=${movieName}&type=${Videotype}`);
@@ -36,14 +39,15 @@ window.addEventListener("DOMContentLoaded", () => {
 
 // FIX 3: search input
 input.addEventListener("input", async (e) => {
-    const movieName = e.target.value.trim();
+    movieName = e.target.value.trim();
 
     if (!movieName) {
         await loadMovies("Popular"); // show default again
         return;
     }
 
-    await loadMovies(movieName);
+    await loadMovies(movieName, movieType);
+    movieName = "";
 });
 
 movieType.addEventListener("change", async () => {
@@ -51,7 +55,9 @@ movieType.addEventListener("change", async () => {
     console.log("movieType changed to:", movieType.value);
 
     const value = input.value.trim();
+    movieType = value ? value : "popular";
 
-    await loadMovies(Videotype=(value ? value : "popular"), movieName=value || "popular");
+    await loadMovies(movieName, movieType);
+    movieType = "shows"; // reset to default after search
 
 });
