@@ -48,8 +48,10 @@ input.addEventListener("input", async (e) => {
 
 movieType.addEventListener("change", async () => {
 
+    console.log("movieType changed to:", movieType.value);
+
     const value = input.value.trim();
 
-    await loadMovies(value || "popular");
+    await loadMovies(Videotype=(value ? value : "popular"), movieName=value || "popular");
 
 });
