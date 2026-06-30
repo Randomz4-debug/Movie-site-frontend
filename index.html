@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Real-time Movie site application">
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
+    <link rel="manifest" href="/static/site.webmanifest">
+    <title>Movie-Site</title>
+</head>
+<body>
+    <div class="topnav">
+        <a href="#">Home</a>
+    </div>
+
+    <!-- FIXED FORM -->
+    <form class="search-bar-form" id="searchForm">
+        <input type="search" id="query" name="q" placeholder="Search...">
+    </form>
+
+    <div class="rows">
+        <div class="cols">
+            <div class="movie-cards"></div>
+        </div>
+    </div>
+
+    <!-- defer prevents DOM issues -->
+    <script src="script.js" type="module" defer></script>
+</body>
+</html>

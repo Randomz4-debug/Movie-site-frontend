@@ -1,0 +1,47 @@
+import MovieFetcher from "../backend/script.js";
+
+const input = document.getElementById("query");
+const moviecards = document.querySelector(".movie-cards");
+
+// FIX 1: make function async
+async function loadMovies(movieName = "popular", Videotype = "shows") {
+    const movies = await MovieFetcher({ MovieName: movieName, type: Videotype });
+
+    moviecards.innerHTML = "";
+
+    movies.forEach((movie) => {
+        if (!movie.show) return; // safety check
+
+        const card = document.createElement("div");
+        card.classList.add("card");
+
+        const title = document.createElement("h2");
+        title.textContent = movie.show.name;
+
+        const image = document.createElement("img");
+        image.src = movie.show.image
+            ? movie.show.image.medium
+            : "https://placehold.co/150x220?text=No+Image";
+
+        card.appendChild(title);
+        card.appendChild(image);
+        moviecards.appendChild(card);
+    });
+}
+
+// FIX 2: correct load event + proper call
+window.addEventListener("load", () => {
+    loadMovies("popular"); // default homepage content
+});
+
+// FIX 3: search input
+input.addEventListener("input", async (e) => {
+    const movieName = e.target.value.trim();
+
+    if (!movieName) {
+        loadMovies("popular"); // show default again
+        return;
+    }
+
+    await loadMovies(movieName);
+});
