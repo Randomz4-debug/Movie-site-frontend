@@ -1,5 +1,6 @@
 const input = document.getElementById("query");
 const moviecards = document.querySelector(".movie-cards");
+const movieType_dropdown = document.getElementById("movieType");
 
 let movieName = "popular"
 let movieType = "shows"
@@ -50,7 +51,7 @@ input.addEventListener("input", async (e) => {
     movieName = "";
 });
 
-movieType.addEventListener("change", async () => {
+movieType_dropdown.addEventListener("change", async () => {
 
     console.log("movieType changed to:", movieType.value);
 
